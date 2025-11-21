@@ -1,310 +1,381 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vuxer - Landing Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Luan Lanches</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet for realtime map (OpenStreetMap) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+4/8XG8s0sizHk6rE1bLP1bJbQ0y5Q5gM2R5pH0+8=" crossorigin=""/>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+    :root{
+      --bg-dark:#07070a;
+      --neon-blue:#00e5ff;
+      --neon-red:#ff0b3b;
+      --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.02);
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:var(--bg-dark);color:#fff;overflow-x:hidden}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* animated hero background */
+    .hero-bg{
+      position:fixed;inset:0;z-index:-2;background:#000;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+    }
+    .hero-bg::before{
+      content:'';position:absolute;inset:0;background-image:linear-gradient(120deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6));
+      z-index:1;pointer-events:none;
+    }
+    .hero-image{position:absolute;inset:-10%;background-image:url('https://images.unsplash.com/photo-1606756796215-0f4c50b1f4d4?auto=format&fit=crop&w=1950&q=80');
+      background-size:cover;background-position:center;filter:contrast(1.05) saturate(1.1) brightness(.75);transform:scale(1.08);
+      animation:slowShift 30s linear infinite;z-index:-3;}
+    @keyframes slowShift{0%{transform:scale(1.06) translateX(0)}50%{transform:scale(1.12) translateX(-3%)}100%{transform:scale(1.06) translateX(0)}}
 
-    body {
-        font-family: 'Poppins', sans-serif;
-        color: #e8f4ff; /* 🔵 Texto mais claro e visível */
-        overflow-x: hidden;
-        position: relative;
-        min-height: 100vh;
-        text-shadow: 0 0 8px rgba(0, 170, 255, 0.4); /* brilho suave */
+    /* subtle moving neon grid overlay */
+    .grid-overlay{position:absolute;inset:0;background-image:radial-gradient(rgba(0,0,0,0.0) 1px, transparent 1px), linear-gradient(transparent, rgba(0,0,0,0.0));
+      background-size: 80px 80px, 100% 100%;mix-blend-mode:overlay;opacity:.15;animation:moveGrid 60s linear infinite}
+    @keyframes moveGrid{0%{transform:translateY(0)}100%{transform:translateY(-120px)}}
+
+    header{padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--neon-blue),var(--neon-red));display:flex;align-items:center;justify-content:center;box-shadow:0 6px 30px rgba(0,229,255,.06),0 6px 40px rgba(255,11,59,.06);font-weight:700}
+    .logo span{font-size:22px;color:#050510;letter-spacing:1px}
+    nav{display:flex;gap:14px;align-items:center}
+    nav a{color:#cfeef8;text-decoration:none;padding:8px 12px;border-radius:8px;font-weight:600}
+    nav a:hover{background:linear-gradient(90deg, rgba(0,229,255,0.08), rgba(255,11,59,0.06));backdrop-filter:blur(2px)}
+
+    .cta-order{background:transparent;border:2px solid rgba(255,11,59,0.12);padding:8px 14px;border-radius:12px;color:var(--neon-red);font-weight:700}
+
+    main{padding:20px 28px 120px}
+
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-top:20px}
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:28px;border-radius:18px;box-shadow:0 8px 40px rgba(0,0,0,0.6);backdrop-filter:blur(6px)}
+    .hero h1{font-size:38px;margin:0 0 8px;line-height:1.05}
+    .hero p{margin:0 0 16px;color:#d7f9ff}
+    .buttons{display:flex;gap:12px}
+    .btn{padding:12px 18px;border-radius:12px;font-weight:700;border:0;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--neon-blue),#5ef1ff);color:#020617}
+    .btn-accent{background:linear-gradient(90deg,var(--neon-red),#ff5c7a);color:#100209}
+
+    /* Menu cards */
+    .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:24px}
+    .card{background:var(--glass);padding:14px;border-radius:14px;display:flex;gap:12px;align-items:center;border:1px solid rgba(255,255,255,0.03)}
+    .thumb{width:84px;height:84px;border-radius:10px;background-size:cover;background-position:center;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+    .card h4{margin:0;font-size:16px}
+    .price{font-weight:700;color:var(--neon-red)}
+
+    /* Tabs section */
+    .tabs{margin-top:30px;background:var(--glass-2);padding:12px;border-radius:12px}
+    .tab-buttons{display:flex;gap:8px}
+    .tab-buttons button{background:transparent;border:0;padding:8px 12px;border-radius:10px;color:#cfeef8;font-weight:700;cursor:pointer}
+    .tab-buttons button.active{box-shadow:0 6px 20px rgba(0,229,255,0.06);background:linear-gradient(90deg, rgba(0,229,255,0.03), rgba(255,11,59,0.03))}
+    .tab-content{margin-top:12px}
+
+    /* contact form */
+    form.label{display:block}
+    .form-row{display:flex;gap:8px;margin-bottom:8px}
+    .form-row input,.form-row textarea{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
+
+    /* map */
+    #map{width:100%;height:320px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);overflow:hidden}
+
+    /* floating buttons */
+    .floating-wrap{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:10px;z-index:999}
+    .float-btn{width:58px;height:58px;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,0.5);cursor:pointer;border:0}
+    .ig{background:linear-gradient(180deg,rgba(255,11,59,0.14),rgba(255,11,59,0.06));border:2px solid rgba(255,11,59,0.12);color:var(--neon-red)}
+    .order{background:linear-gradient(180deg,rgba(0,229,255,0.08),rgba(0,229,255,0.02));border:2px solid rgba(0,229,255,0.08);color:var(--neon-blue)}
+    .float-icon{width:28px;height:28px}
+
+    /* responsive */
+    @media(max-width:920px){
+      .hero{grid-template-columns:1fr;}
+      nav{display:none}
+      header{padding:16px}
+    }
+    @media(max-width:520px){
+      .logo{width:54px;height:54px}
+      .hero h1{font-size:28px}
     }
 
-    /* 🔵 FUNDO DESFOCADO */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url(imagem1.png) no-repeat center center;
-        background-size: cover;
-        filter: blur(10px) brightness(0.65); /* 🔥 fundo mais escuro para destacar texto */
-        z-index: -1;
-    }
-
-    header {
-      width: 100%;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-      background: rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0, 170, 255, 0.3);
-    }
-
-    header h1 {
-      font-size: 34px;
-      color: #33caff;
-      text-shadow: 0 0 12px #00ccff;
-      font-weight: 700;
-    }
-
-    nav a {
-      color: #e8f4ff;
-      margin: 0 15px;
-      text-decoration: none;
-      font-size: 19px;
-      transition: 0.3s;
-      text-shadow: 0 0 8px rgba(0, 140, 255, 0.7);
-      font-weight: 500;
-    }
-
-    nav a:hover {
-      color: #33caff;
-      text-shadow: 0 0 15px #00ccff;
-    }
-
-    .hero {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 0 20px;
-    }
-
-    .hero h2 {
-      font-size: 56px;
-      color: #4ecbff;
-      text-shadow: 0 0 18px #00cfff;
-      font-weight: 700;
-    }
-
-    .hero p {
-      margin-top: 20px;
-      font-size: 22px;
-      max-width: 650px;
-      color: #d6e9ff;
-      text-shadow: 0 0 6px rgba(0, 150, 255, 0.5);
-      font-weight: 300;
-    }
-
-    .btn {
-      margin-top: 30px;
-      padding: 13px 35px;
-      background: #009dff;
-      border-radius: 10px;
-      border: none;
-      color: white;
-      font-size: 21px;
-      cursor: pointer;
-      box-shadow: 0 0 18px #00baff;
-      transition: 0.3s;
-      font-weight: 600;
-    }
-
-    .btn:hover {
-      background: #33caff;
-      box-shadow: 0 0 25px #33caff;
-    }
-
-    section {
-      padding: 100px 40px;
-      text-align: center;
-    }
-
-    h3 {
-      font-size: 42px;
-      margin-bottom: 20px;
-      color: #4ecbff;
-      text-shadow: 0 0 15px #00ccff;
-      font-weight: 700;
-    }
-
-    .produtos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-      margin-top: 40px;
-    }
-
-    .card {
-      background: rgba(0, 20, 40, 0.55);
-      padding: 25px;
-      border-radius: 15px;
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(0, 170, 255, 0.35);
-      transition: 0.3s;
-      color: #e9f8ff;
-      text-shadow: 0 0 8px rgba(0, 150, 255, 0.4);
-      font-size: 20px;
-      font-weight: 500;
-    }
-
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 0 22px #00ccff;
-      background: rgba(0, 40, 70, 0.7);
-    }
-
-    #contato input, 
-    #contato textarea {
-      width: 100%;
-      padding: 14px;
-      margin-top: 15px;
-      border-radius: 10px;
-      border: none;
-      background: rgba(255,255,255,0.08);
-      color: white;
-      font-size: 17px;
-      text-shadow: none;
-    }
-
-    #contato input::placeholder,
-    #contato textarea::placeholder {
-      color: #cfe6ff;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px;
-      background: #000a16;
-      color: #9ecdff;
-      margin-top: 40px;
-      font-size: 18px;
-    }
-
-    /* 🔵 BOTÕES FLUTUANTES */
-    .float-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      background: #007bff;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      text-decoration: none;
-      box-shadow: 0 0 18px #009dff;
-      margin-top: 10px;
-      transition: 0.3s;
-      z-index: 9999;
-    }
-
-    .float-btn:hover {
-      background: #33b5ff;
-      box-shadow: 0 0 25px #33caff;
-      transform: scale(1.12);
-    }
-
-    .insta { bottom: 90px; }
-    .zap { bottom: 20px; }
-
-    .prod-img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  box-shadow: 0 0 15px rgba(0, 200, 255, 0.4);
-  border: 1px solid rgba(0, 200, 255, 0.4);
-}
-
-.card h4 {
-  margin-top: 10px;
-  font-size: 22px;
-  color: #4ecbff;
-  text-shadow: 0 0 10px #00cfff;
-}
-
-.card p {
-  font-size: 16px;
-  color: #d6e9ff;
-  margin-top: 8px;
-}
-
-
+    footer{padding:28px;color:#bfeffb;text-align:center;opacity:.9}
   </style>
 </head>
 <body>
-
-<header>
-  <h1>Vuxer</h1>
-  <nav>
-    <a href="#produtos">Produtos</a>
-    <a href="#sobre">Sobre</a>
-    <a href="#contato">Contato</a>
-  </nav>
-</header>
-
-<div class="hero">
-  <h2>Bem-vindo à Vuxer</h2>
-  <p>Transformando ideias em experiências digitais modernas, responsivas e irresistíveis para seus clientes.</p>
-</div>
-
-<section id="produtos">
-  <h3>Produtos</h3>
-  <div class="produtos">
-
-    <div class="card">
-      <img src="prod1.png" alt="Produto 1" class="prod-img">
-      <h4>Produto 1</h4>
-      <p>Descrição breve do produto.</p>
-    </div>
-
-    <div class="card">
-      <img src="prod2.png" alt="Produto 2" class="prod-img">
-      <h4>Produto 2</h4>
-      <p>Descrição breve do produto.</p>
-    </div>
-
-    <div class="card">
-      <img src="prod3.png" alt="Produto 3" class="prod-img">
-      <h4>Produto 3</h4>
-      <p>Descrição breve do produto.</p>
-    </div>
-
-    <div class="card">
-      <img src="prod4.png" alt="Produto 4" class="prod-img">
-      <h4>Produto 4</h4>
-      <p>Descrição breve do produto.</p>
-    </div>
-
+  <div class="hero-bg">
+    <div class="hero-image"></div>
+    <div class="grid-overlay"></div>
   </div>
-</section>
 
-<section id="sobre">
-  <h3>Sobre Nós</h3>
-  <p>A Vuxer nasceu com um propósito claro: transformar ideias em experiências digitais modernas, impactantes e realmente eficientes.
-Somos apaixonados por criar sites que entregam velocidade, design elegante e alto desempenho, sempre com foco no que mais importa: resultados.
+  <header>
+    <div class="brand">
+      <div class="logo"><span>L</span></div>
+      <div>
+        <div style="font-weight:700">Luan Lanches</div>
+        <div style="font-size:12px;color:#9fe9ff;margin-top:2px">O melhor lanche neon da cidade</div>
+      </div>
+    </div>
 
-Trabalhamos unindo criatividade e tecnologia para desenvolver páginas profissionais, responsivas e com visual marcante — perfeitas para destacar sua marca e conquistar novos clientes.
+    <nav>
+      <a href="#menu">Menu</a>
+      <a href="#promos">Promoções</a>
+      <a href="#contato">Contato</a>
+      <a href="#local">Localização</a>
+      <button class="cta-order" onclick="openOrderModal()">Fazer pedido</button>
+    </nav>
+  </header>
 
-Na Vuxer, cada projeto é feito com cuidado, estratégia e inovação. Estamos aqui para elevar sua presença digital ao próximo nível.</p>
-</section>
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <h1>Bem-vindo ao <span style="color:var(--neon-red)">Luan Lanches</span></h1>
+        <p>Sabores irresistíveis, velocidade no preparo — entregue com estilo neon. Confira nosso menu, promoções e peça em tempo real.</p>
+        <div class="buttons">
+          <button class="btn btn-primary" onclick="scrollToSection('menu')">Ver Menu</button>
+          <button class="btn btn-accent" onclick="scrollToSection('promos')">Promoções</button>
+        </div>
 
-<footer>
-  © 2025 Vuxer - Todos os direitos reservados.
-</footer>
+        <div class="tabs">
+          <div class="tab-buttons">
+            <button class="active" data-tab="menu">Menu</button>
+            <button data-tab="promos">Promoções</button>
+            <button data-tab="contato">Contato</button>
+            <button data-tab="local">Localização</button>
+          </div>
+          <div class="tab-content" id="tab-content">
+            <div id="menu-tab">
+              <div class="menu-grid" id="menu">
+                <div class="card">
+                  <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=500&q=60')"></div>
+                  <div>
+                    <h4>Hambúrguer Clássico</h4>
+                    <div style="font-size:13px;color:#cfeef8">Carne suculenta, queijo derretido</div>
+                    <div class="price">R$ 19,90</div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1548946526-f69e2424cf45?auto=format&fit=crop&w=500&q=60')"></div>
+                  <div>
+                    <h4>Duplo Bacon</h4>
+                    <div style="font-size:13px;color:#cfeef8">Bacon crocante e molho especial</div>
+                    <div class="price">R$ 24,90</div>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="thumb" style="background-image:url('https://images.unsplash.com/photo-1606756796215-0f4c50b1f4d4?auto=format&fit=crop&w=500&q=60')"></div>
+                  <div>
+                    <h4>Batata Suprema</h4>
+                    <div style="font-size:13px;color:#cfeef8">Porção grande com cheddar</div>
+                    <div class="price">R$ 14,90</div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-<a href="https://instagram.com/seuinstagram" target="_blank" class="float-btn insta">
-  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" style="width:28px; filter: invert(1);">
-</a>
+            <div id="promos-tab" style="display:none">
+              <h3>Promoções ativas</h3>
+              <ul>
+                <li>Combo 2x Hambúrguer + Batata - R$ 39,90</li>
+                <li>Happy Hour (17h-19h): 20% off em bebidas</li>
+              </ul>
+            </div>
 
-<a href="https://wa.me/5511999999999" target="_blank" class="float-btn zap">
-  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" style="width:28px; filter: invert(1);">
-</a>
+            <div id="contato-tab" style="display:none">
+              <h3>Fale conosco</h3>
+              <form id="contactForm" onsubmit="handleContact(event)">
+                <div class="form-row"><input type="text" id="name" placeholder="Seu nome" required></div>
+                <div class="form-row"><input type="email" id="email" placeholder="Seu e‑mail" required></div>
+                <div class="form-row"><textarea id="message" placeholder="Mensagem" rows="4" required></textarea></div>
+                <div style="display:flex;gap:8px"><button class="btn btn-primary" type="submit">Enviar</button><button type="button" class="btn" onclick="openMail()">Enviar por e-mail</button></div>
+              </form>
+              <p style="font-size:12px;color:#9fe9ff;margin-top:8px">Observação: este formulário abre o seu cliente de e-mail para envio (pode ser integrado a um backend ou serviço como Formspree).</p>
+            </div>
+
+            <div id="local-tab" style="display:none">
+              <h3>Localização (tempo real)</h3>
+              <div id="map"></div>
+              <p style="font-size:13px;color:#cfeef8;margin-top:8px">Permita uso de localização no navegador para ver a posição atual em tempo real no mapa.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <aside style="position:relative;">
+        <div style="background:linear-gradient(180deg, rgba(255,11,59,0.06), rgba(0,229,255,0.02));padding:18px;border-radius:18px;max-width:420px">
+          <h3 style="margin-top:0">Pedidos Rápidos</h3>
+          <p style="margin-bottom:12px">Peça agora e receba em até 30 minutos (dependendo da área).</p>
+          <div style="display:flex;gap:8px">
+            <input id="quick-qty" type="number" min="1" value="1" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);background:transparent;color:#fff">
+            <button class="btn btn-accent" onclick="quickOrder()">Pedir</button>
+          </div>
+          <div style="margin-top:12px;font-size:13px;color:#dffafd">Telefone: (00) 0 0000-0000</div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="promos" style="margin-top:34px">
+      <h2 style="margin-bottom:10px">Promoções</h2>
+      <div class="menu-grid">
+        <div class="card"><div style="flex:1"><h4>Combo Noite</h4><div style="font-size:13px;color:#cfeef8">Hambúrguer + bebida</div><div class="price">R$ 29,90</div></div></div>
+        <div class="card"><div style="flex:1"><h4>Segunda da Fome</h4><div style="font-size:13px;color:#cfeef8">Descontos especiais nas segundas</div><div class="price">Até 30% off</div></div></div>
+      </div>
+    </section>
+
+    <section id="contato" style="margin-top:34px">
+      <h2>Contato</h2>
+      <p>Nos mande uma mensagem — ou use o formulário acima.</p>
+    </section>
+
+    <section id="local" style="margin-top:34px">
+      <h2>Localização</h2>
+      <p>Mapa em tempo real abaixo.</p>
+      <div id="map-embed-mobile" style="margin-top:12px;display:none">
+        <div id="map2" style="height:300px;border-radius:12px"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    © <span id="year"></span> Luan Lanches — Feito para abrir o apetite.
+  </footer>
+
+  <!-- floating buttons -->
+  <div class="floating-wrap">
+    <a class="float-btn ig" href="https://instagram.com" target="_blank" title="Instagram">
+      <!-- Instagram SVG (red) -->
+      <svg class="float-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.4"/><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z" stroke="currentColor" stroke-width="1.4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor"/></svg>
+    </a>
+    <button class="float-btn order" onclick="openOrderModal()" title="Fazer pedido">
+      <!-- Comanda icon (red/blue) -->
+      <svg class="float-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <!-- Modal (basic) -->
+  <div id="orderModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999">
+    <div style="width:420px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.8)">
+      <h3>Fazer pedido</h3>
+      <p>Escolha um lanche e confirme o pedido.</p>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <select id="orderItem" style="flex:1;padding:10px;border-radius:10px;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.04)">
+          <option>Hambúrguer Clássico - R$19,90</option>
+          <option>Duplo Bacon - R$24,90</option>
+          <option>Batata Suprema - R$14,90</option>
+        </select>
+        <input id="orderQty" type="number" min="1" value="1" style="width:80px;padding:10px;border-radius:10px;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.04)">
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+        <button class="btn" onclick="closeOrderModal()">Cancelar</button>
+        <button class="btn btn-accent" onclick="confirmOrder()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet and scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7kIYb0vYh3Ck9Q+u2wYf2kQb4Y1qf3mZxj0XgI=" crossorigin=""></script>
+  <script>
+    // basic interactions
+    document.getElementById('year').textContent = new Date().getFullYear();
+    function scrollToSection(id){
+      const el = document.getElementById(id);
+      if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    // tabs
+    document.querySelectorAll('.tab-buttons button').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab-buttons button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab=btn.getAttribute('data-tab');
+        document.querySelectorAll('#tab-content > div').forEach(d=>d.style.display='none');
+        if(tab==='menu') document.getElementById('menu-tab').style.display='block';
+        if(tab==='promos') document.getElementById('promos-tab').style.display='block';
+        if(tab==='contato') document.getElementById('contato-tab').style.display='block';
+        if(tab==='local') document.getElementById('local-tab').style.display='block';
+      })
+    });
+
+    // contact form: open mail client with prefilled content as fallback
+    function handleContact(e){
+      e.preventDefault();
+      const name=document.getElementById('name').value;
+      const email=document.getElementById('email').value;
+      const message=document.getElementById('message').value;
+      const subject = encodeURIComponent('Contato - Luan Lanches ('+name+')');
+      const body = encodeURIComponent('Nome: '+name+'\nEmail: '+email+'\n\n'+message);
+      window.location.href = 'mailto:seu-email@seudominio.com?subject='+subject+'&body='+body;
+    }
+    function openMail(){
+      const subject = encodeURIComponent('Contato - Luan Lanches');
+      window.location.href = 'mailto:seu-email@seudominio.com?subject='+subject;
+    }
+
+    // quick order and modal
+    function quickOrder(){
+      const qty = document.getElementById('quick-qty').value;
+      alert('Pedido rápido: '+qty+' item(s). Implementar integração com sistema de pedidos.');
+    }
+    function openOrderModal(){document.getElementById('orderModal').style.display='flex'}
+    function closeOrderModal(){document.getElementById('orderModal').style.display='none'}
+    function confirmOrder(){
+      const item = document.getElementById('orderItem').value;
+      const qty = document.getElementById('orderQty').value;
+      closeOrderModal();
+      alert('Pedido confirmado: '+qty+' x '+item+'\n(Implementar envio para cozinha/WhatsApp/PDV)');
+    }
+
+    // realtime map with Leaflet + Geolocation watch
+    let map, marker;
+    function initMap(){
+      map = L.map('map').setView([-23.5489, -46.6388], 13); // fallback view
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(map);
+
+      marker = L.circleMarker([ -23.5489, -46.6388], {radius:8, color: 'var(--neon-red)', weight:2}).addTo(map).bindPopup('Local do usuário');
+
+      if(navigator.geolocation){
+        navigator.geolocation.watchPosition(pos=>{
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          marker.setLatLng([lat,lng]);
+          map.setView([lat,lng], 15);
+        }, err=>{
+          console.warn('Geolocation error:',err.message);
+        },{enableHighAccuracy:true,maximumAge:2000});
+      } else {
+        console.warn('Geolocation não suportado');
+      }
+
+    }
+
+    // initialize mobile small map too
+    function initMobileMap(){
+      const el = document.getElementById('map2');
+      if(!el) return;
+      const m2 = L.map('map2').setView([-23.5489, -46.6388], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(m2);
+    }
+
+    window.addEventListener('load',()=>{
+      initMap();
+      initMobileMap();
+
+      // mobile: show small embed map if narrow
+      if(window.innerWidth < 720){
+        document.getElementById('map-embed-mobile').style.display='block';
+      }
+    });
+
+  </script>
 
 </body>
 </html>
