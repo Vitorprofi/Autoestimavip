@@ -1,131 +1,310 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Auto Estima Vip - Cabelos Femininos</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{
-    background:#000;
-    color:#fff;
-    overflow-x:hidden;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vuxer - Landing Page</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: #e8f4ff; /* 🔵 Texto mais claro e visível */
+        overflow-x: hidden;
+        position: relative;
+        min-height: 100vh;
+        text-shadow: 0 0 8px rgba(0, 170, 255, 0.4); /* brilho suave */
+    }
+
+    /* 🔵 FUNDO DESFOCADO */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url(imagem1.png) no-repeat center center;
+        background-size: cover;
+        filter: blur(10px) brightness(0.65); /* 🔥 fundo mais escuro para destacar texto */
+        z-index: -1;
+    }
+
+    header {
+      width: 100%;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 170, 255, 0.3);
+    }
+
+    header h1 {
+      font-size: 34px;
+      color: #33caff;
+      text-shadow: 0 0 12px #00ccff;
+      font-weight: 700;
+    }
+
+    nav a {
+      color: #e8f4ff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-size: 19px;
+      transition: 0.3s;
+      text-shadow: 0 0 8px rgba(0, 140, 255, 0.7);
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #33caff;
+      text-shadow: 0 0 15px #00ccff;
+    }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero h2 {
+      font-size: 56px;
+      color: #4ecbff;
+      text-shadow: 0 0 18px #00cfff;
+      font-weight: 700;
+    }
+
+    .hero p {
+      margin-top: 20px;
+      font-size: 22px;
+      max-width: 650px;
+      color: #d6e9ff;
+      text-shadow: 0 0 6px rgba(0, 150, 255, 0.5);
+      font-weight: 300;
+    }
+
+    .btn {
+      margin-top: 30px;
+      padding: 13px 35px;
+      background: #009dff;
+      border-radius: 10px;
+      border: none;
+      color: white;
+      font-size: 21px;
+      cursor: pointer;
+      box-shadow: 0 0 18px #00baff;
+      transition: 0.3s;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      background: #33caff;
+      box-shadow: 0 0 25px #33caff;
+    }
+
+    section {
+      padding: 100px 40px;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 42px;
+      margin-bottom: 20px;
+      color: #4ecbff;
+      text-shadow: 0 0 15px #00ccff;
+      font-weight: 700;
+    }
+
+    .produtos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: rgba(0, 20, 40, 0.55);
+      padding: 25px;
+      border-radius: 15px;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(0, 170, 255, 0.35);
+      transition: 0.3s;
+      color: #e9f8ff;
+      text-shadow: 0 0 8px rgba(0, 150, 255, 0.4);
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 22px #00ccff;
+      background: rgba(0, 40, 70, 0.7);
+    }
+
+    #contato input, 
+    #contato textarea {
+      width: 100%;
+      padding: 14px;
+      margin-top: 15px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(255,255,255,0.08);
+      color: white;
+      font-size: 17px;
+      text-shadow: none;
+    }
+
+    #contato input::placeholder,
+    #contato textarea::placeholder {
+      color: #cfe6ff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      background: #000a16;
+      color: #9ecdff;
+      margin-top: 40px;
+      font-size: 18px;
+    }
+
+    /* 🔵 BOTÕES FLUTUANTES */
+    .float-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: #007bff;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      text-decoration: none;
+      box-shadow: 0 0 18px #009dff;
+      margin-top: 10px;
+      transition: 0.3s;
+      z-index: 9999;
+    }
+
+    .float-btn:hover {
+      background: #33b5ff;
+      box-shadow: 0 0 25px #33caff;
+      transform: scale(1.12);
+    }
+
+    .insta { bottom: 90px; }
+    .zap { bottom: 20px; }
+
+    .prod-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 15px rgba(0, 200, 255, 0.4);
+  border: 1px solid rgba(0, 200, 255, 0.4);
 }
-/* FUNDO DOURADO ANIMADO */
-.fundo-animado{
-    position:fixed;top:0;left:0;width:100%;height:100%;
-    background:radial-gradient(circle,#e6b80022 0%,#000 70%);
-    animation:luxo 8s infinite alternate;
-    filter:blur(90px);
-    z-index:-1;
+
+.card h4 {
+  margin-top: 10px;
+  font-size: 22px;
+  color: #4ecbff;
+  text-shadow: 0 0 10px #00cfff;
 }
-@keyframes luxo{0%{transform:scale(1);}100%{transform:scale(1.3);}}
-/* TEXTO DOURADO COM BRILHO */
-.dourado{color:#d4af37;text-shadow:0 0 10px #d4af37,0 0 20px #b8860b;}
-/* HEADER */
-header{
-    width:100%;position:fixed;top:0;left:0;padding:20px 50px;
-    display:flex;justify-content:space-between;align-items:center;
-    background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);z-index:10;
+
+.card p {
+  font-size: 16px;
+  color: #d6e9ff;
+  margin-top: 8px;
 }
-header h1{font-size:32px;font-weight:700;color:#d4af37;}
-nav a{
-    margin-left:25px;color:#fff;text-decoration:none;font-size:18px;
-    transition:.3s;
-}
-nav a:hover{color:#d4af37;}
-/* HERO */
-.hero{
-    display:flex;justify-content:space-between;align-items:center;
-    padding:150px 50px 100px;gap:50px;
-}
-.hero-text h2{
-    font-size:60px;line-height:1.1;color:#d4af37;
-    animation:flutuar 4s infinite alternate;
-}
-.hero-text p{font-size:20px;margin-top:20px;max-width:500px;}
-@keyframes flutuar{0%{transform:translateY(0);}100%{transform:translateY(-15px);}}
-.btn{
-    display:inline-block;margin-top:30px;padding:14px 40px;
-    background:linear-gradient(90deg,#d4af37,#8d6c1f);
-    color:#000;font-weight:700;border-radius:40px;text-decoration:none;font-size:20px;
-    box-shadow:0 0 20px #d4af37;transition:.3s;
-}
-.btn:hover{transform:scale(1.05);box-shadow:0 0 35px #d4af37;}
-.hero img{
-    width:420px;border-radius:20px;box-shadow:0 0 25px #d4af37;
-}
-/* SERVIÇOS */
-.servicos{text-align:center;padding:80px 50px;}
-.servicos h2{font-size:48px;margin-bottom:40px;color:#d4af37;}
-.cards{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;
-}
-.card{
-    background:rgba(255,255,255,0.05);padding:25px;border-radius:20px;
-    backdrop-filter:blur(10px);box-shadow:0 0 15px #d4af37;
-    transition:.3s;
-}
-.card:hover{transform:translateY(-10px);box-shadow:0 0 25px #ffdf6b;}
-.card img{width:100%;border-radius:15px;margin-bottom:20px;}
-/* CONTATO */
-.contato{text-align:center;padding:80px 50px;}
-.contato h2{font-size:45px;color:#d4af37;margin-bottom:20px;}
-.whatsapp-btn{
-    padding:16px 45px;background:#d4af37;color:#000;font-size:22px;
-    font-weight:700;border-radius:40px;text-decoration:none;
-    box-shadow:0 0 20px #d4af37;transition:.3s;
-}
-.whatsapp-btn:hover{transform:scale(1.1);box-shadow:0 0 30px #ffdf6b;}
-/* RESPONSIVO */
-@media(max-width:900px){.hero{flex-direction:column;text-align:center;padding-top:130px;} .hero img{width:330px;} .hero-text h2{font-size:45px;}}
-@media(max-width:600px){header{padding:15px 30px;} header h1{font-size:24px;} nav a{font-size:16px;margin-left:12px;}}
-</style>
+
+
+  </style>
 </head>
 <body>
-<div class="fundo-animado"></div>
+
 <header>
-    <h1>Auto Estima Vip</h1>
-    <nav>
-        <a href="#hero">Início</a>
-        <a href="#servicos">Serviços</a>
-        <a href="#contato">Contato</a>
-    </nav>
+  <h1>Vuxer</h1>
+  <nav>
+    <a href="#produtos">Produtos</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#contato">Contato</a>
+  </nav>
 </header>
-<section class="hero" id="hero">
-    <div class="hero-text">
-        <h2 class="dourado">Transforme Seus Cabelos<br>Com Luxo e Elegância</h2>
-        <p>Especialistas em beleza feminina. Loiros, escovas, hidratações, cortes modernos e tratamentos premium.</p>
-        <a href="#contato" class="btn">Agendar Agora</a>
+
+<div class="hero">
+  <h2>Bem-vindo à Vuxer</h2>
+  <p>Transformando ideias em experiências digitais modernas, responsivas e irresistíveis para seus clientes.</p>
+</div>
+
+<section id="produtos">
+  <h3>Produtos</h3>
+  <div class="produtos">
+
+    <div class="card">
+      <img src="prod1.png" alt="Produto 1" class="prod-img">
+      <h4>Produto 1</h4>
+      <p>Descrição breve do produto.</p>
     </div>
-    <img src="https://imgs.search.brave.com/TOjxFlnnM89CDvw-t_PSORCxdB2kZ_eg63iY-PZhYrM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/Zm90b3MtZ3JhdGlz/L3JldHJhdG8tZG8t/Y2xvc2UtdXAtZGEt/bXVsaGVyLWVsZWdh/bnRlLWJyaW5jb3Mt/YWNlc3Nvcmlvcy1t/dWxoZXItYm9uaXRh/LWxvaXJhLWRlLWNh/YmVsby1sb25nby1l/bmNhcmFjb2xhZG8t/Y29tLW1hcXVpYWdl/bS1kZS1iZWxlemEt/ZS1yZXRyYXRvLWRl/LW1vZGEtZmVtaW5p/bmEtZGUtcGVsZS1z/YXVkYXZlbC1hLWdh/cm90YS1jb20tdW0t/c29ycmlzby1hZ3Jh/ZGF2ZWxfMzQzNjI5/LTU1LmpwZz9zZW10/PWFpc19oeWJyaWQm/dz03NDAmcT04MA" alt="Cabelos Femininos">
-</section>
-<section class="servicos" id="servicos">
-    <h2>Serviços Exclusivos</h2>
-    <div class="cards">
-        <div class="card">
-            <img src="https://imgs.search.brave.com/bzUE9gy-wlf0OAgnidgSjVZFeK7pg5eE5pha5kPKqHE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvODky/MzY2MTQwL3B0L2Zv/dG8vYmVhdXRpZnVs/LXdvbWFuLXdpdGgt/bG9uZy1zdHJhaWdo/dC1oYWlyLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1BRkto/d0FGc2xqeHNJUHpa/MHNfRFRUSE5QZW1T/T3dkMnVaNEVwVEVy/dlh3PQ" alt="Loiro Premium">
-            <h3 class="dourado">Loiro Perfeito</h3>
-            <p>Clareamento profissional, descoloração saudável e tons personalizados.</p>
-        </div>
-        <div class="card">
-            <img src="https://imgs.search.brave.com/_7vuQZ4c0GWjIa86TVbfO_HI-dIOnnk750sNt1epPy4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNDg4/OTE0NDA1L3B0L2Zv/dG8vcHJldG8tYmVs/ZXphLWNvbS1sb25n/by1jYWJlbG8tbGlz/by5qcGc_cz02MTJ4/NjEyJnc9MCZrPTIw/JmM9VWFuVmREQldS/ZE9Yak5HT2VDbnJZ/WTkwakJXb0huSkQz/UTJZOVY5aFZIND0" alt="Escova e Hidratação">
-            <h3 class="dourado">Escova & Hidratação</h3>
-            <p>Tratamentos para brilho intenso, maciez e redução de frizz.</p>
-        </div>
-        <div class="card">
-            <img src="https://imgs.search.brave.com/Sh4LCGNsszU8JDSp-wmXxTs3-ft8_JgtJBSF5enKzPM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNTEy/OTY0MzI1L3B0L2Zv/dG8vdW1hLWZhbnQl/QzMlQTFzdGljYS10/cmVzc2VzLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz15cGhu/a1hldjVrQUx2dlhn/UlNvd3pYTUotZ2dW/NVZJc3N2elVUYjRa/UkNNPQ" alt="Corte Feminino">
-            <h3 class="dourado">Corte Feminino</h3>
-            <p>Do clássico ao moderno, cortes que valorizam sua beleza.</p>
-        </div>
+
+    <div class="card">
+      <img src="prod2.png" alt="Produto 2" class="prod-img">
+      <h4>Produto 2</h4>
+      <p>Descrição breve do produto.</p>
     </div>
+
+    <div class="card">
+      <img src="prod3.png" alt="Produto 3" class="prod-img">
+      <h4>Produto 3</h4>
+      <p>Descrição breve do produto.</p>
+    </div>
+
+    <div class="card">
+      <img src="prod4.png" alt="Produto 4" class="prod-img">
+      <h4>Produto 4</h4>
+      <p>Descrição breve do produto.</p>
+    </div>
+
+  </div>
 </section>
-<section class="contato" id="contato">
-    <h2>Agende Seu Horário</h2>
-    <a class="whatsapp-btn" href="https://wa.me/5515996069571?text=Olá! Quero agendar um horário." target="_blank">Falar no WhatsApp</a>
+
+<section id="sobre">
+  <h3>Sobre Nós</h3>
+  <p>A Vuxer nasceu com um propósito claro: transformar ideias em experiências digitais modernas, impactantes e realmente eficientes.
+Somos apaixonados por criar sites que entregam velocidade, design elegante e alto desempenho, sempre com foco no que mais importa: resultados.
+
+Trabalhamos unindo criatividade e tecnologia para desenvolver páginas profissionais, responsivas e com visual marcante — perfeitas para destacar sua marca e conquistar novos clientes.
+
+Na Vuxer, cada projeto é feito com cuidado, estratégia e inovação. Estamos aqui para elevar sua presença digital ao próximo nível.</p>
 </section>
+
+<footer>
+  © 2025 Vuxer - Todos os direitos reservados.
+</footer>
+
+<a href="https://instagram.com/seuinstagram" target="_blank" class="float-btn insta">
+  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" style="width:28px; filter: invert(1);">
+</a>
+
+<a href="https://wa.me/5511999999999" target="_blank" class="float-btn zap">
+  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" style="width:28px; filter: invert(1);">
+</a>
+
 </body>
-
 </html>
-
