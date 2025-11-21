@@ -1,659 +1,380 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Estima VIP: Redefinindo o Luxo em Beleza</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        /* Variáveis Globais (Mais Clean) */
-        :root {
-            --color-primary-dark: #070707; /* Fundo Ultra Dark */
-            --color-accent-gold: #C8A03E; /* Dourado Clássico e Sóbrio */
-            --color-secondary-light: #F8F8F8; /* Fundo de seções claras */
-            --color-text-light: #EEEEEE;
-            --color-text-dark: #222222;
-            --font-serif-luxe: 'Cinzel', serif;
-            --font-sans-body: 'Open Sans', sans-serif;
-            --transition-speed: 0.4s;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Auto Estima Vip - Salão de Beleza</title>
 
-        /* -------------------- */
-        /* RESET E BASE */
-        /* -------------------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
 
-        body {
-            font-family: var(--font-sans-body);
-            line-height: 1.8;
-            color: var(--color-text-dark);
-            background-color: var(--color-primary-dark);
-            scroll-behavior: smooth;
-        }
+  <style>
+    :root{
+      --bg-black:#050405;
+      --neon-red:#ff003c;
+      --neon-red-70:rgba(255,0,60,0.12);
+      --glass: rgba(255,255,255,0.02);
+      --muted:#cfcfcf;
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg-black);color:#fff;overflow-x:hidden}
 
-        .container {
-            max-width: 1350px; /* Maior largura para sensação de luxo */
-            margin: 0 auto;
-            padding: 0 50px;
-        }
+    /* animated textured black background */
+    body::before{
+      content:'';position:fixed;inset:0;z-index:-30;background-image:url('imagem1.png');
+      background-size:cover;background-position:center;filter:brightness(.18) contrast(1.05) saturate(1.1);transform:scale(1.06);
+      animation:bgFloat 28s ease-in-out infinite alternate;opacity:1;
+    }
+    @keyframes bgFloat{0%{transform:scale(1.02) translateY(0)}50%{transform:scale(1.08) translateY(-3%)}100%{transform:scale(1.02) translateY(0)}}
 
-        section {
-            padding: 120px 0; /* Mais padding para espaçamento premium */
-            position: relative;
-        }
+    /* subtle red radial vignette */
+    body::after{content:'';position:fixed;inset:0;z-index:-20;pointer-events:none;background:radial-gradient(ellipse at center, rgba(255,0,60,0.06), rgba(0,0,0,0.75))}
 
-        .text--gold { color: var(--color-accent-gold); }
-        .text--light { color: var(--color-text-light); }
+    header{display:flex;justify-content:space-between;align-items:center;padding:20px 6%;position:sticky;top:0;backdrop-filter:blur(6px);background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25));border-bottom:1px solid rgba(255,0,60,0.08);z-index:40}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--neon-red),#ff6b7a);display:flex;align-items:center;justify-content:center;font-weight:800;color:#140406;box-shadow:0 8px 40px rgba(255,0,60,0.08)}
+    .brand h1{margin:0;font-size:20px;color:var(--neon-red);text-shadow:0 0 14px rgba(255,0,60,0.18)}
 
-        /* -------------------- */
-        /* TIPOGRAFIA E TÍTULOS */
-        /* -------------------- */
-        .heading-luxe {
-            font-family: var(--font-serif-luxe);
-            font-weight: 700;
-            text-transform: uppercase;
-            text-align: center;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
+    nav{display:flex;gap:14px;align-items:center}
+    nav a{color:#e8e8e8;text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:600}
+    nav a:hover{color:var(--neon-red);box-shadow:0 6px 20px rgba(255,0,60,0.06);background:rgba(255,0,60,0.02)}
 
-        .section-title {
-            font-size: 3.2rem;
-            color: var(--color-text-dark);
-        }
-        .section-subtitle {
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 80px;
-            font-weight: 300;
-            color: #777;
-        }
-        .section-dark .section-title {
-            color: var(--color-text-light);
-        }
-        .section-dark .section-subtitle {
-            color: #999;
-        }
+    .cta{background:linear-gradient(90deg,var(--neon-red),#ff7a96);color:#140406;padding:10px 14px;border-radius:12px;font-weight:700;border:0;cursor:pointer}
 
-        /* -------------------- */
-        /* BOTÕES DE CTA */
-        /* -------------------- */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 35px;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 3px;
-            transition: all var(--transition-speed) ease-in-out;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 2px solid transparent;
-            cursor: pointer;
-        }
+    /* Hero */
+    .hero{display:flex;gap:28px;align-items:center;padding:70px 6%;min-height:420px}
+    .hero-left{flex:1}
+    .kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--neon-red-70);color:var(--neon-red);font-weight:700;margin-bottom:18px}
+    .hero h2{font-size:44px;line-height:1.02;margin:0 0 14px;color:var(--neon-red);text-shadow:0 6px 28px rgba(255,0,60,0.12)}
+    .hero p{margin:0 0 20px;color:var(--muted);max-width:640px}
+    .hero .actions{display:flex;gap:12px}
 
-        .btn-primary {
-            background-color: var(--color-accent-gold);
-            color: var(--color-primary-dark);
-            box-shadow: 0 8px 20px rgba(200, 160, 62, 0.3);
-        }
+    .card-book{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:14px;width:380px;border:1px solid rgba(255,0,60,0.06);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+    .card-book h3{margin:0 0 8px;color:var(--neon-red)}
+    .card-book label{display:block;font-size:13px;color:#cfcfcf;margin:8px 0 4px}
+    .card-book input,.card-book select,.card-book textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
+    .card-book .book-row{display:flex;gap:8px}
 
-        .btn-primary:hover {
-            background-color: var(--color-primary-dark);
-            color: var(--color-accent-gold);
-            border-color: var(--color-accent-gold);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(200, 160, 62, 0.5);
-        }
-        
-        .btn-whatsapp {
-            background-color: #25D366;
-            color: var(--color-text-light);
-            border: none;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .btn-whatsapp:hover {
-            background-color: #1DAA51;
-            transform: translateY(-2px);
-        }
+    /* Services */
+    .services{padding:60px 6%;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+    .service{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:12px;border:1px solid rgba(255,0,60,0.06);transition:transform .3s,box-shadow .3s}
+    .service:hover{transform:translateY(-8px);box-shadow:0 18px 60px rgba(255,0,60,0.06)}
+    .service h4{margin:0 0 8px;color:var(--neon-red)}
+    .service p{margin:0;color:#d6d6d6}
 
-        /* -------------------- */
-        /* HEADER FIXO LUXE */
-        /* -------------------- */
-        .header-luxe {
-            background-color: var(--color-primary-dark);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 20px 0;
-        }
+    /* About / Contact */
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;padding:60px 6%}
+    .about{background:rgba(255,255,255,0.02);padding:22px;border-radius:12px;border:1px solid rgba(255,0,60,0.04)}
 
-        .header-luxe__content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    footer{padding:28px 6%;text-align:center;color:#bfbfbf}
 
-        .logo-luxe {
-            font-family: var(--font-serif-luxe);
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--color-text-light);
-            text-decoration: none;
-            letter-spacing: 3px;
-        }
-        .logo-luxe span {
-            color: var(--color-accent-gold);
-        }
+    /* floating buttons */
+    .floating{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:12px;z-index:80}
+    .fab{width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;border:0;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+    .fab.wa{background:linear-gradient(180deg,rgba(255,0,60,0.09),rgba(255,0,60,0.03));border:2px solid rgba(255,0,60,0.12);color:var(--neon-red)}
+    .fab.ig{background:linear-gradient(180deg,rgba(255,0,60,0.12),rgba(255,0,60,0.04));border:2px solid rgba(255,0,60,0.12);color:var(--neon-red)}
+    .fab svg{width:28px;height:28px}
 
-        .nav-luxe__menu {
-            list-style: none;
-            display: flex;
-        }
+    /* map */
+    #map{height:320px;width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
 
-        .nav-luxe__link {
-            color: var(--color-text-light);
-            text-decoration: none;
-            padding: 10px 20px;
-            margin: 0 5px;
-            transition: color var(--transition-speed), border-bottom var(--transition-speed);
-            position: relative;
-            font-family: var(--font-sans-body);
-            font-weight: 400;
-            text-transform: uppercase;
-        }
+    /* responsive */
+    @media(max-width:980px){.hero{flex-direction:column;padding:40px 6%}.card-book{width:100%}.two-col{grid-template-columns:1fr}}
+    @media(max-width:480px){.hero h2{font-size:28px}}
 
-        .nav-luxe__link::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--color-accent-gold);
-            transition: width var(--transition-speed) ease-in-out, left var(--transition-speed) ease-in-out;
-        }
+    /* Correção: opções dos serviços visíveis sempre */
+  select, option {
+    background:#111 !important;
+    color:#fff !important;
+  }
+  /* Estilo novo e completo para o seletor do agendamento */
+  select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #ff003c;
+    background: #0d0d0d;
+    color: #fff !important;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+    box-shadow: 0 0 10px #ff003c55;
+  }
 
-        .nav-luxe__link:hover::after {
-            width: 100%;
-            left: 0;
-        }
+  select:hover,
+  select:focus {
+    border-color: #ff1a4d;
+    box-shadow: 0 0 18px #ff003c;
+  }
 
-        /* -------------------- */
-        /* HERO SECTION LUXE */
-        /* -------------------- */
-        .hero-luxe {
-            /* Substituir pela sua imagem de alta resolução */
-            background: linear-gradient(rgba(7, 7, 7, 0.6), rgba(7, 7, 7, 0.9)), url('placeholder_luxe_fachada_highres.jpg') center/cover no-repeat fixed;
-            min-height: 95vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: var(--color-text-light);
-        }
+  option {
+    background: #0d0d0d;
+    color: #fff !important;
+    padding: 10px;
+  }
 
-        .hero-luxe__content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
+  /* ===== MENU HAMBÚRGUER RESPONSIVO ===== */
+  .hamburger{
+    display:none;
+    flex-direction:column;
+    cursor:pointer;
+    gap:6px;
+  }
+  .hamburger span{
+    width:28px;
+    height:3px;
+    background:#ff003c;
+    box-shadow:0 0 8px #ff003c;
+    transition:0.3s;
+  }
 
-        .hero-luxe__title {
-            font-family: var(--font-serif-luxe);
-            font-size: 5rem;
-            font-weight: 900;
-            margin-bottom: 25px;
-            line-height: 1.1;
-            text-shadow: 0 0 15px rgba(200, 160, 62, 0.6);
-        }
+  @media(max-width:850px){
+    nav{
+      position:fixed;
+      top:0;
+      right:-100%;
+      width:70%;
+      height:100vh;
+      background:rgba(0,0,0,0.85);
+      display:flex;
+      flex-direction:column;
+      padding-top:120px;
+      gap:35px;
+      transition:0.4s;
+      border-left:2px solid #ff003c;
+    }
+    nav a{
+      font-size:22px;
+      margin-left:0;
+      text-align:center;
+    }
+    nav.active{
+      right:0;
+    }
+    .hamburger{
+      display:flex;
+    }
+  }
 
-        .hero-luxe__subtitle {
-            font-size: 1.6rem;
-            font-weight: 300;
-            margin-bottom: 60px;
-            color: #ccc;
-        }
+  /* ===== AJUSTES DE RESPONSIVIDADE GERAL ===== */
+  @media(max-width:700px){
+    .hero h2{font-size:34px;}
+    .hero p{font-size:16px;}
+    header{padding:20px 6%;}
+    .section{padding:60px 8%;}
+  }
 
-        /* -------------------- */
-        /* SOBRE NÓS E DESTAQUE */
-        /* -------------------- */
-        .section-light {
-            background-color: var(--color-secondary-light);
-            color: var(--color-text-dark);
-        }
-
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 80px;
-            align-items: center;
-        }
-
-        .about-text h3 {
-            font-family: var(--font-serif-luxe);
-            font-size: 2.2rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--color-accent-gold);
-            text-align: left;
-        }
-
-        .about-text p {
-            margin-bottom: 20px;
-        }
-        
-        .about-image-container {
-            position: relative;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-        }
-        .about-image {
-            width: 100%;
-            height: auto;
-            display: block;
-            border: 5px solid var(--color-accent-gold);
-        }
-
-        /* -------------------- */
-        /* DESTAQUES/SERVIÇOS (Foco na Conversão) */
-        /* -------------------- */
-        .highlights {
-            background-color: var(--color-primary-dark);
-            color: var(--color-text-light);
-        }
-
-        .highlights-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .highlight-card {
-            padding: 30px;
-            background-color: #1A1A1A;
-            border-top: 5px solid var(--color-accent-gold);
-            border-radius: 5px;
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-        }
-        .highlight-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(200, 160, 62, 0.2);
-        }
-
-        .highlight-card i {
-            font-size: 3rem;
-            color: var(--color-accent-gold);
-            margin-bottom: 20px;
-        }
-
-        .highlight-card h4 {
-            font-family: var(--font-serif-luxe);
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-            color: var(--color-text-light);
-        }
-
-        /* -------------------- */
-        /* CONTATO E FORMULÁRIO VIP */
-        /* -------------------- */
-        .contact-section {
-            background-color: var(--color-secondary-light);
-            padding-bottom: 0;
-        }
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 80px;
-            align-items: start;
-        }
-
-        .form-area {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 5px;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-area h3 {
-            font-family: var(--font-serif-luxe);
-            font-size: 2rem;
-            margin-bottom: 30px;
-            color: var(--color-accent-gold);
-            text-align: center;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--color-text-dark);
-            font-size: 0.9rem;
-        }
-
-        .whatsapp-form input,
-        .whatsapp-form select,
-        .whatsapp-form textarea {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            font-size: 1rem;
-            background-color: #fcfcfc;
-            color: var(--color-text-dark);
-            margin-bottom: 20px;
-        }
-        .whatsapp-form textarea {
-            resize: vertical;
-        }
-
-        /* Informações de Contato */
-        .info-area {
-            padding-top: 50px;
-        }
-        .info-area h4 {
-            font-family: var(--font-serif-luxe);
-            font-size: 1.5rem;
-            color: var(--color-text-dark);
-            margin-bottom: 25px;
-        }
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .info-item i {
-            font-size: 1.3rem;
-            color: var(--color-accent-gold);
-        }
-        .info-item a {
-            color: var(--color-text-dark);
-            text-decoration: none;
-            transition: color var(--transition-speed);
-        }
-        .info-item a:hover {
-            color: var(--color-accent-gold);
-        }
-
-        /* -------------------- */
-        /* MAPA E LOCALIZAÇÃO */
-        /* -------------------- */
-        .map-section {
-            padding-top: 50px;
-            padding-bottom: 100px;
-        }
-        
-        .map-container {
-            width: 100%;
-            height: 600px;
-            margin-top: 40px;
-            border-radius: 5px;
-            overflow: hidden;
-            border: 8px solid var(--color-primary-dark);
-            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
-        }
-
-        .map-container iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        /* -------------------- */
-        /* FOOTER */
-        /* -------------------- */
-        .footer-luxe {
-            background-color: var(--color-primary-dark);
-            color: var(--color-text-light);
-            text-align: center;
-            padding: 30px 0;
-            font-size: 0.9rem;
-            border-top: 1px solid #1a1a1a;
-        }
-        .footer-luxe a {
-            color: var(--color-accent-gold);
-            text-decoration: none;
-        }
-
-        /* -------------------- */
-        /* RESPONSIVIDADE (MOBILE/TABLET) */
-        /* -------------------- */
-        @media (max-width: 1200px) {
-            .container { padding: 0 30px; }
-            .hero-luxe__title { font-size: 4rem; }
-        }
-
-        @media (max-width: 992px) {
-            .hero-luxe__title { font-size: 3.5rem; }
-            .nav-luxe__menu { display: none; } /* Oculta menu, requer menu hamburger real */
-            .header-luxe__content { justify-content: center; }
-
-            .about-grid, .highlights-grid, .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 50px;
-            }
-            .about-image-container { 
-                order: -1; /* Coloca imagem acima do texto no mobile */
-            }
-            .about-text h3 {
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .section { padding: 80px 0; }
-            .hero-luxe__title { font-size: 2.5rem; }
-            .hero-luxe__subtitle { font-size: 1.2rem; }
-            .section-title { font-size: 2.2rem; }
-            .btn { width: 100%; text-align: center; justify-content: center;}
-            .map-container { height: 350px; }
-        }
-    </style>
+  @media(max-width:450px){
+    .hero{padding:90px 6% 120px;}
+    .hero h2{font-size:28px;}
+    .hero p{font-size:15px;}
+    .card{padding:18px;}
+  }
+</style>
 </head>
 <body>
 
-    <header class="header-luxe">
-        <div class="container header-luxe__content">
-            <a href="#hero" class="logo-luxe">AUTO ESTIMA <span>VIP</span></a>
-            <nav class="nav-luxe">
-                <ul class="nav-luxe__menu">
-                    <li><a href="#about" class="nav-luxe__link">A Marca</a></li>
-                    <li><a href="#highlights" class="nav-luxe__link">Destaques</a></li>
-                    <li><a href="#localizacao" class="nav-luxe__link">Localização</a></li>
-                    <li><a href="#contato" class="nav-luxe__link nav-luxe__link--cta"><i class="fas fa-calendar-alt"></i> Agendamento</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <header>
+    <div class="brand">
+      <div class="logo">AE</div>
+      <div>
+        <h1>Auto Estima Vip</h1>
+      </div>
+    </div>
+    <nav>
+      <a href="#inicio">Início</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#contato">Contato</a>
+      <button class="cta" onclick="openBooking()">Agendar</button>
+    </nav>
+    <div class="hamburger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</header>
 
-    <section id="hero" class="hero-luxe">
-        <div class="container hero-luxe__content">
-            <p class="text--gold" style="font-size: 1.2rem; letter-spacing: 5px; margin-bottom: 10px;">SEU REFÚGIO DE ALTO PADRÃO</p>
-            <h1 class="hero-luxe__title">
-                Onde a Beleza É Mais Que Serviço, É um <span class="text--gold">Investimento em Você</span>.
-            </h1>
-            <p class="hero-luxe__subtitle">
-                Permita-se o luxo de um atendimento exclusivo.
-            </p>
-            <a href="#contato" class="btn btn-primary">
-                RESERVAR MINHA EXPERIÊNCIA VIP <i class="fas fa-chevron-right"></i>
-            </a>
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-left">
+        <div class="kicker">Salão VIP</div>
+        <h2>Cuide da sua beleza com quem entende e valoriza você</h2>
+        <p>Profissionais especializados, atendimento personalizado e resultados que realçam sua confiança. Beleza com sofisticação e toque VIP.</p>
+        <div class="actions">
+          <button class="cta" onclick="openBooking()">Agendar Agora</button>
+          <button class="cta" style="background:transparent;border:1px solid rgba(255,0,60,0.08);color:#fff" onclick="scrollTo('#servicos')">Ver Serviços</button>
         </div>
+      </div>
+
+      <aside>
+        <div class="card-book" aria-hidden="false">
+          <h3>Agendamento Rápido</h3>
+          <label for="nome">Nome</label>
+          <input id="nome" placeholder="Seu nome" />
+          <label for="servico">Serviço</label>
+          <select id="servico">
+            <option>Corte Feminino</option>
+            <option>Coloração / Mechas</option>
+            <option>Escova / Finalização</option>
+            <option>Hidratação Premium</option>
+          </select>
+          <div class="book-row" style="margin-top:8px">
+            <div style="flex:1"><label for="data">Data</label><input id="data" type="date"/></div>
+            <div style="width:120px"><label for="hora">Hora</label><input id="hora" type="time"/></div>
+          </div>
+          <label for="tel">Telefone / WhatsApp</label>
+          <input id="tel" placeholder="(00) 90000-0000" />
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="cta" onclick="confirmBooking()">Confirmar</button>
+            <button class="cta" style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff" onclick="resetBooking()">Limpar</button>
+          </div>
+          <p style="font-size:12px;color:#cfcfcf;margin-top:10px">Após confirmar, você receberá instruções por WhatsApp (simulação de envio). Integração disponível via API/Back-end.</p>
+        </div>
+      </aside>
     </section>
 
-    <section id="about" class="section section-light">
-        <div class="container">
-            <h2 class="heading-luxe section-title">Nossa Curadoria de Luxo</h2>
-            <p class="section-subtitle">Conheça o compromisso do Auto Estima VIP com a excelência e exclusividade.</p>
-
-            <div class="about-grid">
-                <div class="about-text">
-                    <h3>A Filosofia do Cuidado VIP</h3>
-                    <p>No Auto Estima VIP, cada detalhe foi meticulosamente planejado para proporcionar um ambiente de requinte e bem-estar. Não somos apenas um salão; somos um estúdio de transformação onde a técnica se encontra com a arte.</p>
-                    <p>Trabalhamos exclusivamente com as **marcas mais prestigiadas do mundo**, garantindo resultados duradouros e a saúde máxima dos seus cabelos e pele. Nossos profissionais são treinados nas tendências europeias, prontos para criar o visual que eleva a sua autoestima ao nível VIP.</p>
-                    <p>Descubra por que a exclusividade faz toda a diferença.</p>
-                    <a href="#highlights" class="btn btn-primary" style="margin-top: 10px;">
-                        <i class="fas fa-gem"></i> Nossos Diferenciais
-                    </a>
-                </div>
-                <div class="about-image-container">
-                    <img src="placeholder_luxe_interior_highres.jpg" alt="Interior luxuoso do Salão Auto Estima VIP" class="about-image">
-                </div>
-            </div>
-        </div>
+    <section id="servicos" class="services">
+      <div class="service">
+        <h4>Corte Feminino</h4>
+        <p>Cortes modernos e personalizados para cada formato de rosto.</p>
+      </div>
+      <div class="service">
+        <h4>Coloração e Mechas</h4>
+        <p>Técnicas profissionais com produtos de alta qualidade.</p>
+      </div>
+      <div class="service">
+        <h4>Escova e Finalização</h4>
+        <p>Acabamento impecável para eventos e dia a dia.</p>
+      </div>
+      <div class="service">
+        <h4>Hidratação Premium</h4>
+        <p>Tratamentos de nutrição profunda para revitalizar os fios.</p>
+      </div>
     </section>
 
-    <section id="highlights" class="section highlights section-dark">
-        <div class="container">
-            <h2 class="heading-luxe section-title">O Padrão Ouro de Serviços</h2>
-            <p class="section-subtitle">Nossos diferenciais que garantem a sua satisfação total.</p>
-            
-            <div class="highlights-grid">
-                <div class="highlight-card">
-                    <i class="fas fa-palette"></i>
-                    <h4>Colorimetria Exclusiva</h4>
-                    <p>Técnicas personalizadas de mechas e tinturas que respeitam a saúde dos fios. Cores vibrantes e duradouras.</p>
-                </div>
-                <div class="highlight-card">
-                    <i class="fas fa-star"></i>
-                    <h4>Tratamentos Premium</h4>
-                    <p>Protocolos de reconstrução e hidratação das melhores marcas globais. Fios sedosos e restaurados desde a primeira sessão.</p>
-                </div>
-                <div class="highlight-card">
-                    <i class="fas fa-hand-sparkles"></i>
-                    <h4>Atendimento Personalizado</h4>
-                    <p>Sala VIP, bebidas selecionadas e tempo dedicado. Seu momento de beleza sem pressa e com total conforto.</p>
-                </div>
-            </div>
-        </div>
+    <section id="sobre" class="two-col">
+      <div class="about">
+        <h3>Sobre o Salão</h3>
+        <p>Auto Estima Vip nasceu para oferecer um atendimento diferenciado e resultados que inspiram. Nossa equipe é formada por profissionais experientes que utilizam técnicas atualizadas e produtos de qualidade para cuidar de você com carinho.</p>
+      </div>
+      <div class="about">
+        <h3>Equipe</h3>
+        <p>Trabalhamos com cabeleireiros, coloristas e especialistas em tratamentos capilares que seguem tendências internacionais e priorizam a saúde dos fios.</p>
+      </div>
     </section>
 
-
-    <section id="contato" class="section contact-section section-light">
-        <div class="container">
-            <h2 class="heading-luxe section-title">Agende Seu Momento VIP</h2>
-            <p class="section-subtitle">Fale com nossa concierge e reserve a data de sua transformação.</p>
-            
-            <div class="contact-grid">
-                <div class="form-area">
-                    <h3>Solicitação de Reserva Rápida</h3>
-                    <form class="whatsapp-form" onsubmit="enviarWhatsApp(event)">
-                        <div class="input-group">
-                            <label for="nome"><i class="fas fa-user"></i> Nome Completo</label>
-                            <input type="text" id="nome" name="nome" required placeholder="Seu nome">
-                        </div>
-                        <div class="input-group">
-                            <label for="servico"><i class="fas fa-cut"></i> Serviço Principal Desejado</label>
-                            <select id="servico" name="servico" required>
-                                <option value="">Escolha o Serviço...</option>
-                                <option value="Coloração Luxe">Coloração Luxe</option>
-                                <option value="Corte e Styling">Corte e Styling</option>
-                                <option>Tratamento Capilar de Choque</option>
-                                <option value="Estética Facial/Corporal">Estética Facial/Corporal</option>
-                                <option value="Dia da Noiva/Debutante">Dia da Noiva/Debutante</option>
-                                <option value="Outros">Outros</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label for="mensagem"><i class="fas fa-clock"></i> Preferência de Data/Hora (Ex: Terça, 15h)</label>
-                            <textarea id="mensagem" name="mensagem" rows="3" placeholder="Por favor, informe suas datas preferenciais e qualquer detalhe adicional."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-whatsapp">
-                            <i class="fab fa-whatsapp"></i> ENVIAR SOLICITAÇÃO VIA WHATSAPP
-                        </button>
-                    </form>
-                </div>
-
-                <div class="info-area">
-                    <h4>Informações e Suporte</h4>
-                    <div class="info-item">
-                        <i class="fas fa-phone-alt"></i>
-                        <p><strong>Telefone:</strong> <a href="tel:+5511987654321">(11) 98765-4321</a></p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-envelope"></i>
-                        <p><strong>Email:</strong> <a href="mailto:contato@autoestimavip.com.br">contato@autoestimavip.com.br</a></p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-clock"></i>
-                        <p><strong>Horário:</strong> Terça a Sábado, das 9h às 19h.</p>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <p><strong>Endereço:</strong> Rua do Alto Padrão, 1000 - Centro de Luxo/SP</p>
-                    </div>
-
-                    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px dashed #ddd;">
-                        <h4 style="margin-bottom: 15px;">Siga-nos:</h4>
-                        <a href="#" target="_blank" class="nav-luxe__link" style="padding: 0 10px;"><i class="fab fa-instagram" style="color: var(--color-accent-gold); font-size: 1.8rem;"></i></a>
-                        <a href="#" target="_blank" class="nav-luxe__link" style="padding: 0 10px;"><i class="fab fa-facebook-f" style="color: var(--color-accent-gold); font-size: 1.8rem;"></i></a>
-                    </div>
-                </div>
-            </div>
+    <section id="contato" style="padding:60px 6%">
+      <h3 style="color:var(--neon-red)">Contato</h3>
+      <div style="display:grid;grid-template-columns:1fr 420px;gap:24px;margin-top:18px">
+        <div>
+          <p style="color:#ccc">Agendamentos e dúvidas: envie mensagem pelo WhatsApp ou ligue para nós.</p>
+          <p><strong>WhatsApp:</strong> <a href="https://wa.me/5515996069571?text=Olá,%20gostaria%20de%20mais%20informações." target="_blank" style="color:var(--neon-red)">(55) 15 99606-9571</a></p>
+          <p><strong>Endereço:</strong> Rua Exemplo, 123 - Centro</p>
         </div>
+        <div>
+          <div id="map"></div>
+        </div>
+      </div>
     </section>
 
-    <section id="localizacao" class="section map-section section-light">
-        <div class="container">
-            <h2 class="heading-luxe section-title">Como Nos Encontrar</h2>
-            <p class="section-subtitle">Localização privilegiada com fácil acesso e estacionamento exclusivo.</p>
-            
-            <div class="map-container">
-                 <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d423.13569269104084!2d-48.060010452006146!3d-23.60094580841632!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1763697397908!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-        </div>
-    </section>
+  </main>
 
-    <footer class="footer-luxe">
-        <div class="container">
-            <p>
-                &copy; 2025 Auto Estima VIP. Todos os Direitos Reservados. | Elevando o Padrão da Beleza.
-                <br>Design e Implementação por <a href="#">Seu Nome/Agência</a>.
-            </p>
-        </div>
-    </footer>
+  <footer>
+    © <span id="year"></span> Auto Estima Vip — Todos os direitos reservados.
+  </footer>
 
-    <script>
-        // Função para Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
+  <!-- Floating action buttons -->
+  <div class="floating">
+    <a class="fab wa" href="https://wa.me/5515996069571?text=Olá,%20gostaria%20de%20mais%20informações." target="_blank" title="WhatsApp">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.08c0 4.99-4.05 9.04-9.04 9.04A9 9 0 0 1 3 12.08 9 9 0 0 1 12 3.04c1.55 0 3 .36 4.32 1.02L21 3v9.08z" stroke="currentColor" stroke-width="1.2"/></svg>
+    </a>
+    <a class="fab ig" href="https://www.instagram.com/especialistaemloiro/" target="_blank" title="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.2"/><circle cx="17" cy="7" r="0.6" fill="currentColor"/></svg>
+    </a>
+  </div>
 
-        // Função do Formulário WhatsApp
-        function enviarWhatsApp(event) {
-            event.preventDefault();
-            
-            const nome = document.getElementById('nome').value;
-            const servico = document.getElementById('servico').value;
-            const mensagem = document.getElementById('mensagem').value;
-            
-            // SUBSTITUA ESTE NÚMERO PELO WHATSAPP REAL DO SALÃO (Ex: 5511987654321)
-            const numeroTelefone = "5511987654321"; 
-            
-            const textoMensagem = `Olá, Concierge Auto Estima VIP. Meu nome é ${nome} e gostaria de agendar: *${servico}*. Preferência/Mensagem: ${mensagem}.`;
-            
-            const mensagemCodificada = encodeURIComponent(textoMensagem);
-            const linkWhatsApp = `https://wa.me/${15996069571}?text=${mensagemCodificada}`;
-            
-            window.open(linkWhatsApp, '_blank');
-        }
-    </script>
+  <!-- Booking modal (progressive enhancement) -->
+  <div id="bookingModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:120">
+    <div style="width:420px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:12px;border:1px solid rgba(255,0,60,0.06)">
+      <h3 style="margin-top:0;color:var(--neon-red)">Agendar Serviço</h3>
+      <label>Nome</label><input id="mNome" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff">
+      <label style="margin-top:8px">Serviço</label>
+      <select id="mServico" style="width:100%;padding:10px;border-radius:8px;margin-top:6px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff">
+        <option>Corte Feminino</option>
+        <option>Coloração / Mechas</option>
+        <option>Escova / Finalização</option>
+        <option>Hidratação Premium</option>
+      </select>
+      <div style="display:flex;gap:8px;margin-top:8px"><input id="mData" type="date" style="flex:1;padding:10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff"><input id="mHora" type="time" style="width:140px;padding:10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff"></div>
+      <label style="margin-top:8px">WhatsApp</label><input id="mTel" placeholder="(00) 00000-0000" style="width:100%;padding:10px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff">
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="cta" onclick="sendBooking()">Enviar</button><button style="background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff;padding:10px 12px;border-radius:8px" onclick="closeBooking()">Fechar</button></div>
+    </div>
+  </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    function scrollTo(sel){const el=document.querySelector(sel);if(el)el.scrollIntoView({behavior:'smooth'});}
+
+    // booking quick actions
+    function openBooking(){document.getElementById('bookingModal').style.display='flex'}
+    function closeBooking(){document.getElementById('bookingModal').style.display='none'}
+    function resetBooking(){document.getElementById('nome').value='';document.getElementById('servico').selectedIndex=0;document.getElementById('data').value='';document.getElementById('hora').value='';document.getElementById('tel').value='';}
+    function confirmBooking(){
+      const nome=document.getElementById('nome').value||'---';
+      const serv=document.getElementById('servico').value||'---';
+      const data=document.getElementById('data').value||'---';
+      const hora=document.getElementById('hora').value||'---';
+      const tel=document.getElementById('tel').value||'---';
+      // open WhatsApp with prefilled message (simulação)
+      const text = encodeURIComponent(`Agendamento - Auto Estima Vip
+Nome: ${nome}
+Serviço: ${serv}
+Data: ${data} ${hora}
+Telefone: ${tel}`);
+      window.open('https://wa.me/5515996069571?text=Olá,%20gostaria%20de%20saber%20se%20você%20tem%20horário%20disponível? - '+text,'_blank');
+      alert('Pedido de agendamento enviado via WhatsApp (simulado). Você também pode integrar envio por backend.');
+    }
+
+    function sendBooking(){
+      const n=document.getElementById('mNome').value||'---';
+      const s=document.getElementById('mServico').value||'---';
+      const d=document.getElementById('mData').value||'---';
+      const h=document.getElementById('mHora').value||'---';
+      const t=document.getElementById('mTel').value||'---';
+      const msg = encodeURIComponent(`Agendamento - Auto Estima Vip
+Nome: ${n}
+Serviço: ${s}
+Data: ${d} ${h}
+WhatsApp: ${t}`);
+      window.open('https://wa.me/5515996069571?text=Olá,%20gostaria%20de%20saber%20se%20você%20tem%20horário%20disponível? - '+msg,'_blank');
+      closeBooking();
+    }
+
+    // Map (Leaflet) with geolocation watch
+    function initMap(){
+      const map = L.map('map',{zoomControl:false}).setView([-23.55,-46.63],13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);
+      const salonMarker = L.marker([-23.55,-46.63]).addTo(map).bindPopup('Auto Estima Vip (Endereço de exemplo)');
+
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(pos=>{
+          const lat=pos.coords.latitude; const lng=pos.coords.longitude;
+          const user = L.circleMarker([lat,lng],{radius:8,color:'#ff003c'}).addTo(map).bindPopup('Sua localização');
+          map.setView([lat,lng],13);
+        },err=>{console.warn('geo error',err.message)});
+      }
+    }
+    window.addEventListener('load',()=>{try{initMap()}catch(e){console.warn(e)}});
+  </script>
+
+<script>
+  function toggleMenu(){
+    document.querySelector('nav').classList.toggle('active');
+  }
+</script>
 </body>
 </html>
